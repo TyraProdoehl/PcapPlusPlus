@@ -7,59 +7,9 @@ matrix:
   include:
     - os: linux
       env:
-        - DOCKER_IMAGE=ubuntu1404
-    - os: linux
-      env:
-        - DOCKER_IMAGE=ubuntu1604
-    - os: linux
-      env:
-        - DOCKER_IMAGE=ubuntu1804
-    - os: linux
-      env:
-        - DOCKER_IMAGE=centos7
-    - os: linux
-      env:
-        - DOCKER_IMAGE=fedora29
-    - os: linux
-      env:
-        - DOCKER_IMAGE=ubuntu1604-dpdk1611
-    - os: linux
-      env:
-        - DOCKER_IMAGE=ubuntu1604-dpdk1711
-    - os: linux
-      env:
-        - DOCKER_IMAGE=ubuntu1604-dpdk1811
-    - os: linux
-      env:
-        - DOCKER_IMAGE=ubuntu1604-dpdk1902
-    - os: linux
-      env:
-        - DOCKER_IMAGE=ubuntu1604-dpdk1908
-    - os: linux
-      env:
-        - DOCKER_IMAGE=ubuntu1604-pfring
-        - PF_RING=True
-    - os: osx
-      compiler: clang
-      osx_image: xcode7.3
-    - os: osx
-      compiler: clang
-      osx_image: xcode8.3
-    - os: osx
-      compiler: clang
-      osx_image: xcode9.2
-    - os: osx
-      compiler: clang
-      osx_image: xcode9.4
-    - os: osx
-      compiler: clang
-      osx_image: xcode10.1
-    - os: osx
-      compiler: clang
-      osx_image: xcode10.3
-    - os: osx
-      compiler: clang
-      osx_image: xcode11
+        - DOCKER_IMAGE=fedora
+        - IMAGE_TAG=31
+        - LINUX_DISTRO=fedora
     - os: osx
       compiler: clang
       osx_image: xcode11.2
@@ -67,8 +17,11 @@ matrix:
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-       docker pull seladb/$DOCKER_IMAGE:latest;
-       docker run -itd --name $DOCKER_IMAGE -v $(pwd):/PcapPlusPlus seladb/$DOCKER_IMAGE;
+       docker pull $DOCKER_IMAGE:$IMAGE_TAG;
+       docker run -itd --name $DOCKER_IMAGE -v $(pwd):/PcapPlusPlus $DOCKER_IMAGE:$IMAGE_TAG;
+    fi
+  - if [[ "$LINUX_DISTRO" == "fedora" ]]; then
+       docker exec -i $DOCKER_IMAGE bash -c "dnf groupinstall -y \"Development Tools\"; dnf install -y gcc-c++ libstdc++ libpcap-devel";
     fi
 
 before_script:
