@@ -72,3 +72,6 @@ mk/vs2019/**
 #Tutorial outputs
 Examples/Tutorials/**/Makefile
 Examples/Tutorials/**/*.exe
+
+# ignore setup-dpdk.sh
+setup-dpdk.sh
