@@ -18,7 +18,8 @@ function HELP {
    echo ""
    echo -e "Basic usage: $SCRIPT [-h] [--pf-ring] [--pf-ring-home] [--dpdk] [--dpdk-home] [--use-immediate-mode] [--set-direction-enabled] [--install-dir] [--libpcap-include-dir] [--libpcap-lib-dir]"\\n
    echo "The following switches are recognized:"
-   echo "--default                --Setup PcapPlusPlus for Linux without PF_RING or DPDK. In this case you must not set --pf-ring or --dpdk"
+   echo "--default                --Build for x64 and setup PcapPlusPlus for Linux without PF_RING or DPDK. In this case you must not set --pf-ring or --dpdk"
+   echo "--aarch64                --Build for aarch64 (arm64 architecture)"
    echo ""
    echo "--pf-ring                --Setup PcapPlusPlus with PF_RING. In this case you must also set --pf-ring-home"
    echo "--pf-ring-home           --Sets PF_RING home directory. Use only when --pf-ring is set"
@@ -122,7 +123,7 @@ if [ $NUMARGS -eq 0 ]; then
 else
 
    # these are all the possible switches
-   OPTS=`getopt -o h --long default,pf-ring,pf-ring-home:,dpdk,dpdk-home:,help,use-immediate-mode,set-direction-enabled,install-dir:,libpcap-include-dir:,libpcap-lib-dir: -- "$@"`
+   OPTS=`getopt -o h --long default,aarch64,pf-ring,pf-ring-home:,dpdk,dpdk-home:,help,use-immediate-mode,set-direction-enabled,install-dir:,libpcap-include-dir:,libpcap-lib-dir: -- "$@"`
 
    # if user put an illegal switch - print HELP and exit
    if [ $? -ne 0 ]; then
@@ -136,6 +137,11 @@ else
      case "$1" in
        # default switch - do nothing basically
        --default)
+         shift ;;
+
+       # build for aarch64 (arm64 architecture)
+       --aarch64)
+         BUILD_FOR_AARCH64=1
          shift ;;
 
        # pf-ring switch - set COMPILE_WITH_PF_RING to 1
@@ -228,11 +234,31 @@ else
 fi
 
 
+OUT_DIR=$PWD/Dist
+
+# compile libpcap
+rm -rf ./Dist && mkdir ./Dist
+rm -rf ./3rdParty/libpcap
+git clone https://github.com/the-tcpdump-group/libpcap ./3rdParty/libpcap && cd ./3rdParty/libpcap
+
+if [ -n "$BUILD_FOR_AARCH64" ]; then
+   CC=aarch64-linux-gnu-gcc ./configure --host=aarch64-linux --prefix=$OUT_DIR
+else
+   ./configure --prefix=$OUT_DIR
+fi
+make && make install
+cd $OLDPWD
+
+
 PLATFORM_MK="mk/platform.mk"
 PCAPPLUSPLUS_MK="mk/PcapPlusPlus.mk"
 
 # copy the basic Linux platform.mk
-cp -f mk/platform.mk.linux $PLATFORM_MK
+if [ -n "$BUILD_FOR_AARCH64" ]; then
+   cp -f mk/platform.mk.linux.aarch64 $PLATFORM_MK
+else
+   cp -f mk/platform.mk.linux $PLATFORM_MK
+fi
 
 # copy the common (all platforms) PcapPlusPlus.mk
 cp -f mk/PcapPlusPlus.mk.common $PCAPPLUSPLUS_MK
@@ -323,6 +349,8 @@ if [ -n "$LIBPCAP_INLCUDE_DIR" ]; then
    echo -e "# non-default libpcap include dir" >> $PCAPPLUSPLUS_MK
    echo -e "LIBPCAP_INLCUDE_DIR := $LIBPCAP_INLCUDE_DIR" >> $PCAPPLUSPLUS_MK
    echo -e "PCAPPP_INCLUDES += -I\$(LIBPCAP_INLCUDE_DIR)\n" >> $PCAPPLUSPLUS_MK
+else
+   echo -e "PCAPPP_INCLUDES += -I\$(PCAPPLUSPLUS_HOME)/Dist/include\n" >> $PCAPPLUSPLUS_MK
 fi
 
 # non-default libpcap lib dir
@@ -330,6 +358,8 @@ if [ -n "$LIBPCAP_LIB_DIR" ]; then
    echo -e "# non-default libpcap lib dir" >> $PCAPPLUSPLUS_MK
    echo -e "LIBPCAP_LIB_DIR := $LIBPCAP_LIB_DIR" >> $PCAPPLUSPLUS_MK
    echo -e "PCAPPP_LIBS_DIR += -L\$(LIBPCAP_LIB_DIR)\n" >> $PCAPPLUSPLUS_MK
+else
+   echo -e "PCAPPP_LIBS_DIR += -L\$(PCAPPLUSPLUS_HOME)/Dist/lib\n" >> $PCAPPLUSPLUS_MK
 fi
 
 # generate installation and uninstallation scripts

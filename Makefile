@@ -59,47 +59,42 @@ endif
 ifdef PF_RING_HOME
 	@cd $(EXAMPLE_PF_RING1)          && $(MAKE) PfRingTrafficFilter
 endif
-	@$(MKDIR) -p Dist/examples
-	@$(MKDIR) -p Dist/mk
-	$(CP) $(EXAMPLE_ARPSPOOF)/Bin/* ./Dist/examples
-	$(CP) $(EXAMPLE_ARPING)/Bin/* ./Dist/examples
-	$(CP) $(EXAMPLE_DNSSPOOF)/Bin/* ./Dist/examples
-	$(CP) $(EXAMPLE_DNSRESOLVER)/Bin/* ./Dist/examples
-	$(CP) $(EXAMPLE_HTTPANALYZE)/Bin/* ./Dist/examples
-	$(CP) $(EXAMPLE_PCAP_PRINT)/Bin/* ./Dist/examples
-	$(CP) $(EXAMPLE_SSLANALYZER)/Bin/* ./Dist/examples
-	$(CP) $(EXAMPLE_PCAPSPLITTER)/Bin/* ./Dist/examples
-	$(CP) $(EXAMPLE_PCAPSEARCH)/Bin/* ./Dist/examples
-	$(CP) $(EXAMPLE_ICMP_FT)/Bin/* ./Dist/examples
-	$(CP) $(EXAMPLE_TCP_REASM)/Bin/* ./Dist/examples
-	$(CP) $(EXAMPLE_TCP_SORT)/Bin/* ./Dist/examples
-	$(CP) $(EXAMPLE_IP_FRAG)/Bin/* ./Dist/examples	
-	$(CP) $(EXAMPLE_IP_DEFRAG)/Bin/* ./Dist/examples	
+	$(CP) $(EXAMPLE_ARPSPOOF)/Bin/* ./Dist/bin
+	$(CP) $(EXAMPLE_ARPING)/Bin/* ./Dist/bin
+	$(CP) $(EXAMPLE_DNSSPOOF)/Bin/* ./Dist/bin
+	$(CP) $(EXAMPLE_DNSRESOLVER)/Bin/* ./Dist/bin
+	$(CP) $(EXAMPLE_HTTPANALYZE)/Bin/* ./Dist/bin
+	$(CP) $(EXAMPLE_PCAP_PRINT)/Bin/* ./Dist/bin
+	$(CP) $(EXAMPLE_SSLANALYZER)/Bin/* ./Dist/bin
+	$(CP) $(EXAMPLE_PCAPSPLITTER)/Bin/* ./Dist/bin
+	$(CP) $(EXAMPLE_PCAPSEARCH)/Bin/* ./Dist/bin
+	$(CP) $(EXAMPLE_ICMP_FT)/Bin/* ./Dist/bin
+	$(CP) $(EXAMPLE_TCP_REASM)/Bin/* ./Dist/bin
+	$(CP) $(EXAMPLE_TCP_SORT)/Bin/* ./Dist/bin
+	$(CP) $(EXAMPLE_IP_FRAG)/Bin/* ./Dist/bin	
+	$(CP) $(EXAMPLE_IP_DEFRAG)/Bin/* ./Dist/bin	
 ifdef USE_DPDK
-	$(CP) $(EXAMPLE_DPDK1)/Bin/* ./Dist/examples
-	$(CP) $(EXAMPLE_DPDK2)/Bin/* ./Dist/examples
-	$(CP) $(EXAMPLE_KNI_PONG)/Bin/* ./Dist/examples
+	$(CP) $(EXAMPLE_DPDK1)/Bin/* ./Dist/bin
+	$(CP) $(EXAMPLE_DPDK2)/Bin/* ./Dist/bin
+	$(CP) $(EXAMPLE_KNI_PONG)/Bin/* ./Dist/bin
 endif
 ifdef PF_RING_HOME
-	$(CP) $(EXAMPLE_PF_RING1)/Bin/* ./Dist/examples
+	$(CP) $(EXAMPLE_PF_RING1)/Bin/* ./Dist/bin
 endif
-	$(CP) mk/PcapPlusPlus.mk ./Dist/mk
 	@echo 'Finished successfully building PcapPlusPlus'
 
 # PcapPlusPlus libs only
 libs:
-	@$(RM) -rf Dist
 	@cd $(COMMONPP_HOME)             && $(MAKE) all
 	@cd $(PACKETPP_HOME)             && $(MAKE) all
 	@cd $(PCAPPP_HOME)               && $(MAKE) all
-	@$(MKDIR) -p Dist
-	@$(MKDIR) -p Dist/header
-	@$(CP) $(COMMONPP_HOME)/Lib/Release/* ./Dist
-	@$(CP) $(PACKETPP_HOME)/Lib/* ./Dist
-	@$(CP) $(PCAPPP_HOME)/Lib/* ./Dist
-	@$(CP) $(COMMONPP_HOME)/header/* ./Dist/header
-	@$(CP) $(PACKETPP_HOME)/header/* ./Dist/header
-	@$(CP) $(PCAPPP_HOME)/header/* ./Dist/header
+	@$(CP) $(COMMONPP_HOME)/Lib/Release/* ./Dist/lib
+	@$(CP) $(PACKETPP_HOME)/Lib/* ./Dist/lib
+	@$(CP) $(PCAPPP_HOME)/Lib/* ./Dist/lib
+	@$(CP) $(COMMONPP_HOME)/header/* ./Dist/include
+	@$(CP) $(PACKETPP_HOME)/header/* ./Dist/include
+	@$(CP) $(PCAPPP_HOME)/header/* ./Dist/include
+
 	@echo 'Finished successfully building PcapPlusPlus libs'
 	@echo ' '
 

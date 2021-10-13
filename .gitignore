@@ -75,3 +75,6 @@ Examples/Tutorials/**/*.exe
 
 # ignore setup-dpdk.sh
 setup-dpdk.sh
+
+# ignore remote libpcap
+3rdParty/libpcap

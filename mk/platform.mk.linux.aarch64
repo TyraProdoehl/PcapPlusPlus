@@ -1,0 +1,23 @@
+LINUX := 1
+
+BIN_EXT :=
+
+LIB_PREFIX := lib
+
+LIB_EXT := .a
+
+CXX := aarch64-linux-gnu-g++
+
+CC := aarch64-linux-gnu-gcc
+
+AR := aarch64-linux-gnu-ar
+
+RM := rm
+
+CP := cp
+
+MKDIR := mkdir
+
+INSTALL_SCRIPT := install.sh
+
+UNINSTALL_SCRIPT := uninstall.sh
