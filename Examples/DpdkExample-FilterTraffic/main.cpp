@@ -270,7 +270,7 @@ int main(int argc, char* argv[])
 	int sendPacketsToPort = -1;
 
 	int optionIndex = 0;
-	char opt = 0;
+	int opt = 0;
 
 	uint32_t mBufPoolSize = DEFAULT_MBUF_POOL_SIZE;
 

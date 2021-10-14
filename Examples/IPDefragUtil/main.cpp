@@ -275,7 +275,7 @@ int main(int argc, char* argv[])
 	AppName::init(argc, argv);
 
 	int optionIndex = 0;
-	char opt = 0;
+	int opt = 0;
 
 	std::string outputFile = "";
 	bool filterByBpfFilter = false;

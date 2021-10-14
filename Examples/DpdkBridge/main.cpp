@@ -197,7 +197,7 @@ int main(int argc, char* argv[])
 	CoreMask coreMaskToUse = (getCoreMaskForAllMachineCores() & 7);
 
 	int optionIndex = 0;
-	char opt = 0;
+	int opt = 0;
 
 	uint32_t mBufPoolSize = DEFAULT_MBUF_POOL_SIZE;
 	uint16_t queueQuantity = DEFAULT_QUEUE_QUANTITY;

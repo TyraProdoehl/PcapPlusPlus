@@ -631,7 +631,7 @@ int main(int argc, char* argv[])
 	bool shouldIncludeEmptySegments = true;
 
 	int optionIndex = 0;
-	char opt = 0;
+	int opt = 0;
 
 	while((opt = getopt_long (argc, argv, "i:r:o:e:f:p:t:n:d:g:svhlx", TcpSorterOptions, &optionIndex)) != -1)
 	{
