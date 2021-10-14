@@ -21,6 +21,8 @@ function HELP {
    echo "--default                --Build for x64 and setup PcapPlusPlus for Linux without PF_RING or DPDK. In this case you must not set --pf-ring or --dpdk"
    echo "--aarch64                --Build for aarch64 (arm64 architecture)"
    echo ""
+   echo "--static                 --Build with static"
+   echo ""
    echo "--pf-ring                --Setup PcapPlusPlus with PF_RING. In this case you must also set --pf-ring-home"
    echo "--pf-ring-home           --Sets PF_RING home directory. Use only when --pf-ring is set"
    echo ""
@@ -123,7 +125,7 @@ if [ $NUMARGS -eq 0 ]; then
 else
 
    # these are all the possible switches
-   OPTS=`getopt -o h --long default,aarch64,pf-ring,pf-ring-home:,dpdk,dpdk-home:,help,use-immediate-mode,set-direction-enabled,install-dir:,libpcap-include-dir:,libpcap-lib-dir: -- "$@"`
+   OPTS=`getopt -o h --long default,aarch64,static,pf-ring,pf-ring-home:,dpdk,dpdk-home:,help,use-immediate-mode,set-direction-enabled,install-dir:,libpcap-include-dir:,libpcap-lib-dir: -- "$@"`
 
    # if user put an illegal switch - print HELP and exit
    if [ $? -ne 0 ]; then
@@ -142,6 +144,11 @@ else
        # build for aarch64 (arm64 architecture)
        --aarch64)
          BUILD_FOR_AARCH64=1
+         shift ;;
+
+       # Build with static
+       --static)
+         BUILD_WITH_STATIC=1
          shift ;;
 
        # pf-ring switch - set COMPILE_WITH_PF_RING to 1
@@ -271,6 +278,11 @@ echo -e "\n\nPCAPPLUSPLUS_HOME := "$PWD >> $PLATFORM_MK
 
 # set current direcrtory as PCAPPLUSPLUS_HOME in PcapPlusPlus.mk (write it in the first line of the file)
 sed -i "1s|^|PCAPPLUSPLUS_HOME := $PWD\n\n|" $PCAPPLUSPLUS_MK
+
+# set build with static
+if [ -n "BUILD_WITH_STATIC" ]; then
+   echo -e "PCAPPP_BUILD_FLAGS += --static" >> $PCAPPLUSPLUS_MK
+fi
 
 # if compiling with PF_RING
 if (( $COMPILE_WITH_PF_RING > 0 )) ; then
